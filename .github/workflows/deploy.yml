@@ -23,6 +23,7 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/comp3050-project:latest
 
   deploy:
@@ -38,6 +39,10 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/comp3050-project:latest
-            docker stop app || true
-            docker rm app || true
-            docker run -d --name app -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/comp3050-project:latest
+            docker stop comp3050-server || true
+            docker rm comp3050-server || true
+            docker run -d --name comp3050-server --restart unless-stopped \
+              -p 8000:8000 \
+              -e APP_USER=admin \
+              -e APP_PASS=secret123 \
+              ${{ secrets.DOCKERHUB_USERNAME }}/comp3050-project:latest
