@@ -3,7 +3,18 @@
 .devcontainer/.env
 # Plaintext test-account passwords (hashes live in src/main/resources/players.txt)
 player-accounts.txt
+# Terraform (infra/) — generated and personal; see infra/terraform.tfvars.example
 .terraform/
-terraform.tfstate
-terraform.tfstate.backup
+.terraform.lock.hcl.info
+*.tfstate
+*.tfstate.*
 *.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc

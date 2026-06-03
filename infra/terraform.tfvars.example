@@ -1,0 +1,5 @@
+# Copy to terraform.tfvars and adjust for your AWS account.
+key_pair_name       = "connection3050"
+dockerhub_username  = "your-dockerhub-username"
+instance_type       = "t3.micro"
+ssh_location        = "0.0.0.0/0"

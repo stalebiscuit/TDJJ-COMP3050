@@ -34,3 +34,17 @@ export APP_PASS=testpass
 mvn compile exec:java
 
 The server starts on port 8000. Stop it with Ctrl+C.
+
+## AWS infrastructure (Terraform)
+
+Configuration lives in `infra/`. Any team member with AWS credentials can deploy:
+
+```bash
+cd infra
+cp terraform.tfvars.example terraform.tfvars   # edit with your key pair and Docker Hub username
+terraform init
+terraform apply
+```
+
+Committed: `main.tf`, `.terraform.lock.hcl`, `terraform.tfvars.example`.  
+Not committed (see `.gitignore`): `.terraform/`, `*.tfstate*`, `terraform.tfvars` (personal settings).
