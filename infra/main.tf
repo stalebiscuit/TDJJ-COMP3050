@@ -16,7 +16,7 @@ variable "key_pair_name" {
   type        = string
 }
 
-variable "jaydenn6" {
+variable "dockerhub_username" {
   description = "Docker Hub username (used in UserData to pull images)"
   type        = string
 }
@@ -36,17 +36,15 @@ resource "aws_instance" "server" {
     #!/bin/bash
     set -e
     dnf update -y
-    dnf install -y docker git
+    dnf install -y docker
     systemctl start docker
     systemctl enable docker
-    git clone https://github.com/jaydennguyen296/TDJJ-COMP3050.git /opt/comp3050
-    cd /opt/comp3050
-    docker build -t comp3050-server .
+    docker pull ${var.dockerhub_username}/comp3050-project:latest
     docker run -d --name comp3050-server --restart unless-stopped \
       -p 80:8000 \
       -e APP_USER=admin \
       -e APP_PASS=secret123 \
-      comp3050-server
+      ${var.dockerhub_username}/comp3050-project:latest
   EOF
 
   tags = {
@@ -56,7 +54,7 @@ resource "aws_instance" "server" {
 
 resource "aws_eip" "app" {
   domain   = "vpc"
-  instance = aws_instance.app.id
+  instance = aws_instance.server.id
 
   tags = {
     Name = "Project-CICD-EIP"
@@ -70,12 +68,12 @@ output "elastic_ip" {
 
 output "instance_public_ip" {
   description = "Public IP address of the instance"
-  value       = aws_instance.tutorial.public_ip
+  value       = aws_instance.server.public_ip
 }
 
 output "instance_id" {
   description = "EC2 instance ID"
-  value       = aws_instance.app.id
+  value       = aws_instance.server.id
 }
 
 resource "aws_security_group" "tutorial" {
