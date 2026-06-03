@@ -23,6 +23,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/week9-tutorial:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/comp3050-project:latest
 
           
