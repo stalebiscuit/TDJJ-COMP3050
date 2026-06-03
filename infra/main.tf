@@ -16,11 +16,16 @@ variable "key_pair_name" {
   type        = string
 }
 
+variable "jaydenn6" {
+  description = "Docker Hub username (used in UserData to pull images)"
+  type        = string
+}
+
 data "aws_ssm_parameter" "ami" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
 
-resource "aws_instance" "tutorial" {
+resource "aws_instance" "server" {
   ami                         = data.aws_ssm_parameter.ami.value
   instance_type               = "t3.micro"
   key_name                    = var.key_pair_name
@@ -49,6 +54,19 @@ resource "aws_instance" "tutorial" {
   }
 }
 
+resource "aws_eip" "app" {
+  domain   = "vpc"
+  instance = aws_instance.app.id
+
+  tags = {
+    Name = "Project-CICD-EIP"
+  }
+}
+
+output "elastic_ip" {
+  description = "Elastic IP address (stable — does not change)"
+  value       = aws_eip.app.public_ip
+}
 
 output "instance_public_ip" {
   description = "Public IP address of the instance"
@@ -56,8 +74,8 @@ output "instance_public_ip" {
 }
 
 output "instance_id" {
-  description = "Instance ID"
-  value       = aws_instance.tutorial.id
+  description = "EC2 instance ID"
+  value       = aws_instance.app.id
 }
 
 resource "aws_security_group" "tutorial" {

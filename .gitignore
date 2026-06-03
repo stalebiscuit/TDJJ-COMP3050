@@ -1,6 +1,9 @@
 *.class
 /target
 .devcontainer/.env
-.terraform/
 # Plaintext test-account passwords (hashes live in src/main/resources/players.txt)
 player-accounts.txt
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
